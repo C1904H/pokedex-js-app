@@ -1,0 +1,15 @@
+body {
+  text-align: center;
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+  color: #133337;
+  font-size: 24px;
+  background-color: #fafafa;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 10px;
+}

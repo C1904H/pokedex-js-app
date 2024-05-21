@@ -1,23 +1,7 @@
 // pokemonList array in IIFE
 let pokemonRepository = (function () {
-
-    let pokemonList = [
-        {
-            name: 'Charmander',
-            height: 0.6,
-            types: ['Fire', ' Blaze']
-        },
-        {
-            name: 'Squirtle',
-            height: 0.5,
-            types: ['Water', ' Torrent']
-        },
-        {
-            name: 'Pikachu',
-            height: 0.4,
-            types: ['Electric', ' Static']
-        }
-    ];
+    let pokemonList = [];
+    let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
 
     // Return pokemon array
     function getAll() {
@@ -27,49 +11,86 @@ let pokemonRepository = (function () {
     // Add pokemon item to list
     function add(pokemon) {
         if (
-            typeof pokemon === 'object') {
+            typeof pokemon === 'object' &&
+            'name' in pokemon
+        ) {
             pokemonList.push(pokemon);
         } else {
             console.log('Error!')
         }
     }
 
-// Add list item and button to DOM 
-function addListItem(pokemon){
-    let pokemonList = document.querySelector ('.pokemon-list');
-    let listpokemon = document.createElement('li');
-    let button = document.createElement('button');
-    button.innerText = pokemon.name;
-    button.classList.add("button-class");
-    listpokemon.appendChild(button);
-    pokemonList.appendChild(listpokemon);
-    
-    // Add event listener to button
-    button.addEventListener('click', function () {
-      showDetails(pokemon);
-    });
-  }
+    // Add list item and button to DOM 
+    function addListItem(pokemon) {
+        let pokemonList = document.querySelector('.pokemon-list');
+        let listpokemon = document.createElement('li');
+        let button = document.createElement('button');
+        button.innerText = pokemon.name;
+        button.classList.add("button-class");
+        listpokemon.appendChild(button);
+        pokemonList.appendChild(listpokemon);
 
-  function showDetails(pokemon){
-    console.log(pokemon);
-  }
+        // Add event listener to button
+        button.addEventListener('click', function () {
+            showDetails(pokemon);
+        });
+    }
+
+    // Load list of pokemon from API
+    function loadList() {
+        return fetch(apiUrl).then(function (response) {
+            return response.json(); //returns promise
+        }).then(function (json) { //promise chaining
+            json.results.forEach(function (item) {
+                let pokemon = {
+                    name: item.name,
+                    detailsUrl: item.url
+                };
+                add(pokemon);
+                console.log(pokemon);
+            });
+        }).catch(function (e) {
+            console.error(e);
+        })
+    }
+
+    // Load details of pokemon from API
+    function loadDetails(item) {
+        let url = item.detailsUrl;
+        // Return JSON response 
+        return fetch(url).then(function (response) {
+            return response.json();
+        }).then(function (details) {
+            item.imageUrl = details.sprites.front_default;
+            item.height = details.height;
+            item.types = details.types;
+        }).catch(function (e) {
+            console.error(e);
+        });
+    }
+
+    function showDetails(pokemon) {
+        loadDetails(pokemon).then(function () {
+            console.log(pokemon);
+        });
+    }
 
     return {
         getAll: getAll,
         add: add,
-        addListItem: addListItem
-    }
+        addListItem: addListItem,
+        loadList: loadList,
+        loadDetails: loadDetails,
+        showDetails: showDetails
+    };
 })();
 
-// Addition of new pokemon item to list
-pokemonRepository.add({
-    name: 'Bulbasaur', height: 2.04, types: ['Grass', ' Poison']
-});
-
 // Print all pokemons in list
-pokemonRepository.getAll().forEach(function(pokemon) {
-    pokemonRepository.addListItem(pokemon);
-  });
+pokemonRepository.loadList().then(function () {
+    pokemonRepository.getAll().forEach(function (pokemon) {
+        pokemonRepository.addListItem(pokemon);
+    });
+});
 
 
 

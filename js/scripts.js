@@ -6,8 +6,7 @@ let pokemonRepository = (function () {
   //Filter pokemons by name
   function filterPokemons(searchTerm) {
     let filteredPokemons = pokemonList.filter((pokemon) =>
-      pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+      pokemon.name.toLowerCase().startsWith(searchTerm));
     let pokemonContainer = document.querySelector('.row');
     pokemonContainer.innerHTML = '';
     filteredPokemons.forEach((pokemon) => addListItem(pokemon));
@@ -80,7 +79,6 @@ let pokemonRepository = (function () {
           detailsUrl: item.url
         };
         add(pokemon);
-        console.log(pokemon);
       });
     } catch (e) {
       console.error(e);
@@ -109,7 +107,6 @@ let pokemonRepository = (function () {
   // Show pokemon details
   function showDetails(item) {
     pokemonRepository.loadDetails(item).then(function () {
-      console.log(item);
       showModal(item);
     });
   }
@@ -165,7 +162,7 @@ pokemonRepository.loadList().then(function () {
   // Search pokemons by name
   document
     .querySelector('#search-form')
-    .addEventListener('submit', function (e) {
+    .addEventListener('input', function (e) {
       e.preventDefault();
       let searchTerm = document.querySelector('#search-input').value;
       pokemonRepository.filterPokemons(searchTerm);

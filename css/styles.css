@@ -30,9 +30,3 @@
 .list-group-item {
   margin: 5px;
 }
-
-.button-img {
-  height: 70px;
-  object-fit: contain;
-  padding-right: 10px;
-}

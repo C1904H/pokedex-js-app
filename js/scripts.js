@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // pokemonList array in IIFE
 let pokemonRepository = (function () {
   let pokemonList = [];
@@ -50,21 +51,9 @@ let pokemonRepository = (function () {
     divElement.appendChild(button);
     button.classList.add('btn', 'btn-info', 'btn-lg', 'btn-block', 'list-btn');
 
-    // Add pokemon image to button
-    let buttonImage = document.createElement('img');
-    buttonImage.classList.add('button-img');
-    buttonImage.alt = 'pokemon name';
-    buttonImage.src = pokemon.imageUrlFront;
-    buttonImage.style = 'width:70px';
-    button.appendChild(buttonImage);
-
     // Add event listener to button
     button.addEventListener('click', function () {
       showDetails(pokemon);
-    });
-
-    loadDetails(pokemon).then(function () {
-      buttonImage.src = pokemon.imageUrlFront;
     });
   }
 

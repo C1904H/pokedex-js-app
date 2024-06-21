@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // pokemonList array in IIFE
 let pokemonRepository = (function () {
   let pokemonList = [];
@@ -6,7 +7,7 @@ let pokemonRepository = (function () {
   //Filter pokemons by name
   function filterPokemons(searchTerm) {
     let filteredPokemons = pokemonList.filter((pokemon) =>
-      pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+      pokemon.name.toLowerCase().startsWith(searchTerm.toLowerCase())
     );
     let pokemonContainer = document.querySelector('.row');
     pokemonContainer.innerHTML = '';
@@ -51,21 +52,9 @@ let pokemonRepository = (function () {
     divElement.appendChild(button);
     button.classList.add('btn', 'btn-info', 'btn-lg', 'btn-block', 'list-btn');
 
-    // Add pokemon image to button
-    let buttonImage = document.createElement('img');
-    buttonImage.classList.add('button-img');
-    buttonImage.alt = 'pokemon name';
-    buttonImage.src = pokemon.imageUrlFront;
-    buttonImage.style = 'width:70px';
-    button.appendChild(buttonImage);
-
     // Add event listener to button
     button.addEventListener('click', function () {
       showDetails(pokemon);
-    });
-
-    loadDetails(pokemon).then(function () {
-      buttonImage.src = pokemon.imageUrlFront;
     });
   }
 
@@ -80,7 +69,6 @@ let pokemonRepository = (function () {
           detailsUrl: item.url
         };
         add(pokemon);
-        console.log(pokemon);
       });
     } catch (e) {
       console.error(e);
@@ -109,7 +97,6 @@ let pokemonRepository = (function () {
   // Show pokemon details
   function showDetails(item) {
     pokemonRepository.loadDetails(item).then(function () {
-      console.log(item);
       showModal(item);
     });
   }
@@ -165,7 +152,7 @@ pokemonRepository.loadList().then(function () {
   // Search pokemons by name
   document
     .querySelector('#search-form')
-    .addEventListener('submit', function (e) {
+    .addEventListener('input', function (e) {
       e.preventDefault();
       let searchTerm = document.querySelector('#search-input').value;
       pokemonRepository.filterPokemons(searchTerm);

@@ -7,8 +7,7 @@ let pokemonRepository = (function () {
   //Filter pokemons by name
   function filterPokemons(searchTerm) {
     let filteredPokemons = pokemonList.filter((pokemon) =>
-      pokemon.name.toLowerCase().startsWith(searchTerm.toLowerCase())
-    );
+      pokemon.name.toLowerCase().startsWith(searchTerm));
     let pokemonContainer = document.querySelector('.row');
     pokemonContainer.innerHTML = '';
     filteredPokemons.forEach((pokemon) => addListItem(pokemon));
